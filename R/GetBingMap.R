@@ -5,7 +5,7 @@
 (
   center=c(lat=42, lon=-76), ##<< optional center (lat first,lon second  )
   mapArea=c(45.219,-122.325,47.610,-122.107), ##<< A rectangular area specified as a bounding box (ll,ur). Required when a center point or set of route points are not specified
-  size = c(640,640), ##<< desired size of the map tile image. defaults to maximum size returned by the Gogle server, which is 640x640 pixels 
+  size = c(640,640), ##<< desired size of the map tile image. defaults to maximum size returned by the Google server, which is 640x640 pixels; see https://msdn.microsoft.com/en-us/library/ff701724.aspx for Bing Maps specific upper limits. 
   destfile, ##<<  File to load the map image from or save to, depending on \code{NEWMAP}.
   zoom =12, ##<< Google maps zoom level.
   markers,  ##<< (optional) defines one or more markers to attach to the image at specified locations. This parameter takes a string of marker definitions separated by the pipe character (|) 
@@ -40,7 +40,10 @@
 #     names(center) = c("lat", "lon");
 #   } else stopifnot( all(names(center) %in% c("lat", "lon")) )
 #   
-  stopifnot(all(size <=640));
+  if (length(size) < 2) size = rep(size, 2)
+  if (size[1] > 2e3) size[1] = 2e3
+  if (size[2] > 1500) size[2] = 1500
+  s = paste(size, collapse = ",")
   
   fileBase <- substring(destfile,1, nchar(destfile)-4);
   fileExt <-  substring(destfile,nchar(destfile)-2,nchar(destfile));
@@ -60,7 +63,6 @@
 	  save(MetaInfo, file = paste(destfile,"rda",sep="."));
   } 
   
-  if (length(size) < 2) {s <- paste(size,size,sep=",")} else {s <- paste(size,collapse=",");}
   if (!is.null(center)) center <- paste(center,collapse=",")
   # if (missing(format)){	
   #   if ( fileExt == "png") format <- "png32"
