@@ -90,8 +90,11 @@
 	    lon.center <- mean(lonR);#lonR[1] + diff(lonR)/2;
 	  #}
 	  center = c(lat.center, lon.center)
-	  BBOX = list(ll = mapArea[1:2], ur =mapArea[3:4])
-	  names(BBOX$ll) = c("lat", "lon");names(BBOX$ur) = c("lat", "lon")
+	  MyMap <- list(lat.center = center[1], lon.center  = center[2]
+	                , zoom = zoom, SCALE = SCALE);
+	  BBOX <- list(ll = XY2LatLon(MyMap, -size[1]/2 + 0.5, -size[2]/2 - 0.5)
+	               , ur = XY2LatLon(MyMap, size[1]/2 + 0.5, size[2]/2 - 0.5))
+	  
 	  MetaInfo <- list(lat.center = center[1], lon.center  = center[2], zoom = zoom, 
 	                   url = "bing", BBOX = BBOX, size=size, SCALE = SCALE);
 	  save(MetaInfo, file = paste(destfile,"rda",sep="."));
@@ -100,7 +103,7 @@
 	  url <- paste0(bingURL, paste0(mapArea,collapse=","), "&mapSize=",  s, "&format=", format)
 	}
 	
-	url <- paste(url, path, sep="");
+	url <- paste0(url, path, sep="");
 	url <- paste(url, extraURL, sep="");
 	
   #if (!missing(hl)) url <- paste0(url, "&language=",hl);
