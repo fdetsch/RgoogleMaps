@@ -41,8 +41,8 @@
 #   } else stopifnot( all(names(center) %in% c("lat", "lon")) )
 #   
   if (length(size) < 2) size = rep(size, 2)
-  if (size[1] > 2e3) size[1] = 2e3
-  if (size[2] > 1500) size[2] = 1500
+  if (size[1] > 2e3) size[1] = 2e3; if (size[1] < 80) size[1] = 80
+  if (size[2] > 1500) size[2] = 1500; if (size[2] < 80) size[2] = 80
   s = paste(size, collapse = ",")
   
   fileBase <- substring(destfile,1, nchar(destfile)-4);
